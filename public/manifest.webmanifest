@@ -1,0 +1,9 @@
+{
+  "name": "Clearflow Territory",
+  "short_name": "Clearflow",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7f3",
+  "theme_color": "#15231f",
+  "icons": []
+}
