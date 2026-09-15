@@ -1,4 +1,5 @@
 import type { AppState, Customer, CustomerStatus, LeafletDrop, MarketingCampaign, MessageTemplate, PaymentStatus, Street, Tier } from "../types";
+import { defaultQuoteCalculatorConfig } from "./quoteCalculator";
 import { approxPoint, idFrom, parseUkDate, streetFromAddress, titleCase } from "../utils/data";
 import { rawPdfCustomers } from "./generatedCustomers";
 
@@ -223,6 +224,7 @@ export const initialState: AppState = {
   leafletDrops: buildLeafletDrops(streets, customers),
   messageTemplates: defaultMessageTemplates,
   campaigns: defaultCampaigns,
+  quoteCalculator: defaultQuoteCalculatorConfig,
 };
 
 function campaignForSource(source: string) {

@@ -1,8 +1,9 @@
 export type CustomerStatus = "active" | "cancelled" | "lead" | "quoted" | "ignored" | "declined" | "paused";
 export type PaymentStatus = "paid" | "due" | "overdue" | "watch";
 export type Tier = "S" | "A" | "B" | "C" | "D";
-export type ViewKey = "dashboard" | "map" | "streets" | "customers" | "marketing" | "add";
+export type ViewKey = "dashboard" | "map" | "streets" | "customers" | "marketing" | "quoteCalculator" | "add";
 export type MessageChannel = "sms" | "whatsapp";
+export type QuoteFrequencyKey = "sixWeekly" | "twelveWeekly" | "oneOff";
 
 export interface Customer {
   id: string;
@@ -70,10 +71,23 @@ export interface MarketingCampaign {
   notes?: string;
 }
 
+export interface QuoteCalculatorItem {
+  id: string;
+  name: string;
+  unitPrice: number;
+}
+
+export interface QuoteCalculatorConfig {
+  items: QuoteCalculatorItem[];
+  minimumCharge: number;
+  frequencyMultipliers: Record<QuoteFrequencyKey, number>;
+}
+
 export interface AppState {
   customers: Customer[];
   streets: Street[];
   leafletDrops: LeafletDrop[];
   messageTemplates: MessageTemplate[];
   campaigns: MarketingCampaign[];
+  quoteCalculator: QuoteCalculatorConfig;
 }

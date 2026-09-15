@@ -5,6 +5,7 @@ import {
   AlertTriangle,
   Bell,
   CalendarDays,
+  Calculator,
   Download,
   Home,
   LayoutDashboard,
@@ -27,8 +28,10 @@ import {
   X,
 } from "lucide-react";
 import { CircleMarker, MapContainer, Polyline, Popup, TileLayer, Tooltip, useMapEvents } from "react-leaflet";
-import type { AppState, Customer, LeafletDrop, MessageTemplate, PaymentStatus, Street, Tier, ViewKey } from "./types";
+import { QuoteCalculator } from "./components/QuoteCalculator";
+import type { AppState, Customer, LeafletDrop, MessageTemplate, PaymentStatus, QuoteCalculatorConfig, Street, Tier, ViewKey } from "./types";
 import { initialState } from "./data/seedData";
+import { normaliseQuoteConfig } from "./utils/quoteCalculator";
 import {
   approxPoint,
   distanceKm,
@@ -64,6 +67,7 @@ const navItems: Array<{ key: ViewKey; label: string; icon: typeof LayoutDashboar
   { key: "streets", label: "Streets", icon: Home },
   { key: "customers", label: "Customers", icon: Users },
   { key: "marketing", label: "Marketing", icon: Megaphone },
+  { key: "quoteCalculator", label: "Quote", icon: Calculator },
   { key: "add", label: "Add", icon: Plus },
 ];
 
@@ -134,6 +138,7 @@ function hydrateState(stored: Partial<AppState>): AppState {
     leafletDrops: stored.leafletDrops ?? initialState.leafletDrops,
     messageTemplates: stored.messageTemplates?.length ? stored.messageTemplates : initialState.messageTemplates,
     campaigns: stored.campaigns?.length ? stored.campaigns : initialState.campaigns,
+    quoteCalculator: normaliseQuoteConfig(stored.quoteCalculator),
   };
 }
 
@@ -471,6 +476,13 @@ export default function App() {
     }));
   }
 
+  function updateQuoteCalculatorConfig(quoteCalculator: QuoteCalculatorConfig) {
+    setState((current) => ({
+      ...current,
+      quoteCalculator,
+    }));
+  }
+
   function markMessageSent(customer: Customer) {
     updateCustomer(customer.id, { lastMessageAt: format(TODAY, "yyyy-MM-dd") });
   }
@@ -612,6 +624,13 @@ export default function App() {
             state={state}
             updateCampaign={updateCampaign}
             updateTemplate={updateTemplate}
+          />
+        )}
+
+        {view === "quoteCalculator" && (
+          <QuoteCalculator
+            config={state.quoteCalculator}
+            onSaveConfig={updateQuoteCalculatorConfig}
           />
         )}
 
@@ -1584,6 +1603,7 @@ function pageTitle(view: ViewKey) {
     streets: "Street engine",
     customers: "Customer database",
     marketing: "Marketing tracker",
+    quoteCalculator: "Quote calculator",
     add: "Add and log",
   }[view];
 }
